@@ -9,7 +9,7 @@ import java.util.*;
 @ToString
 @AllArgsConstructor
 
-public class Playlists_songs {
+public class PlaylistsSongs {
 // id, playlistId, songId,addedDate, positionInPlaylist
 
     @EqualsAndHashCode.Include
