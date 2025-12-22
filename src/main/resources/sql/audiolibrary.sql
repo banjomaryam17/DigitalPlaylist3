@@ -11,23 +11,23 @@ CREATE TABLE genres
 CREATE TABLE playlists
 (
     id           INT AUTO_INCREMENT PRIMARY KEY,
-    user_id      INT          NOT NULL,
+    userId      INT          NOT NULL,
     name         VARCHAR(100) NOT NULL,
     description  TEXT,
-    is_public    BOOLEAN  DEFAULT FALSE,
-    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    isPublic    BOOLEAN  DEFAULT FALSE,
+    createdDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
 );
 CREATE TABLE playlist_songs
 (
     id                   INT AUTO_INCREMENT PRIMARY KEY,
-    playlist_id          INT NOT NULL,
-    song_id              INT NOT NULL,
-    added_date           DATETIME DEFAULT CURRENT_TIMESTAMP,
-    position_in_playlist INT,
-    FOREIGN KEY (playlist_id) REFERENCES playlists (id),
-    FOREIGN KEY (song_id) REFERENCES songs (id),
-    UNIQUE (playlist_id, song_id)
+    playlistId          INT NOT NULL,
+    songId              INT NOT NULL,
+    addedDate           DATETIME DEFAULT CURRENT_TIMESTAMP,
+    positionInPlaylist INT,
+    FOREIGN KEY (playlistId) REFERENCES playlists (id),
+    FOREIGN KEY (songId) REFERENCES songs (id),
+    UNIQUE (playlistId, songId)
 );
 
 
