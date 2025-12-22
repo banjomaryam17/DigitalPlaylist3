@@ -29,3 +29,34 @@ CREATE TABLE playlist_songs
     FOREIGN KEY (song_id) REFERENCES songs (id),
     UNIQUE (playlist_id, song_id)
 );
+
+
+CREATE TABLE subscription (
+    subID INT AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    sub_startDate DATETIME NOT NULL,
+    sub_endDate DATETIME NOT NULL,
+    PRIMARY KEY (subID),
+    UNIQUE (username),
+    FOREIGN KEY (username) REFERENCES users(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE users (
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    userType TINYINT NOT NULL DEFAULT 1 COMMENT '1 for general user, 2 for admin',
+    PRIMARY KEY (username)
+);
+
+
+CREATE TABLE rating (
+     username VARCHAR(50) NOT NULL,
+     songID INT NOT NULL,
+     userRating DECIMAL(2,1) NOT NULL,
+     PRIMARY KEY (username, songID),
+     FOREIGN KEY (username) REFERENCES users(username)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+     FOREIGN KEY (songID) REFERENCES songs(songID)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);

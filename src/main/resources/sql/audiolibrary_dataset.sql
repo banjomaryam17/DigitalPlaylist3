@@ -75,3 +75,26 @@ INSERT INTO playlist_songs (playlist_id, song_id, position_in_playlist) VALUES
 (12, 15, 3),
 (12, 27, 4);
 
+INSERT INTO `subscription` (`username`, `sub_startDate`, `sub_endDate`)
+VALUES
+    ('Aisha',  '2025-11-01 00:00:00', '2026-11-01 00:00:00'),
+    ('Liam',   '2025-03-10 00:00:00', '2026-03-10 00:00:00'),
+    ('Ciara',  '2024-12-15 00:00:00', '2025-12-15 00:00:00');
+
+INSERT INTO `users` (`username`, `email`, `password`, `userType`)
+VALUES
+    ('Aisha', 'aisha@gmail.com', 'aisha123', 1),
+    ('Liam',  'liam@gmail.com',  'liam123',  1),
+    ('Ciara', 'ciara@gmail.com', 'ciara123', 1);
+
+
+INSERT INTO `rating` (`username`, `songID`, `userRating`)
+VALUES
+    ('Ali', 3, 4.0),
+    ('Ben', 2, 4.5),
+    ('Eve', 1, 5.0),
+    ('Mia', 4, 3.5),
+    ('Ali', 2, 4.5),
+    ('Ali', 1, 1.0),
+    ('Mia', 1, 3.0),
+    ('Ben', 5, 4.0);
