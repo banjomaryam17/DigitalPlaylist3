@@ -81,20 +81,20 @@ VALUES
     ('Liam',   '2025-03-10 00:00:00', '2026-03-10 00:00:00'),
     ('Ciara',  '2024-12-15 00:00:00', '2025-12-15 00:00:00');
 
-INSERT INTO `users` (`username`, `email`, `password`, `userType`)
-VALUES
-    ('Aisha', 'aisha@gmail.com', 'aisha123', 1),
-    ('Liam',  'liam@gmail.com',  'liam123',  1),
-    ('Ciara', 'ciara@gmail.com', 'ciara123', 1);
+NSERT INTO users (username, email, password_hash, subscription_status, subscription_expiry) VALUES
+  ('athena',’athena@email’,'$2a$12$MfrThbMXfkuVoaUKFc0gWO99v7iUGc/KmEhh0nOgbl5CjBu5719by',’active’, '2026-12-31 23:59:59'),
+  ( 'helo', ‘helo@email’, '$2a$12$a/5xFCTok30DeFrLmBfP.OrqaQuRFMOxfCpM9Afh7tBI75.XTD1Nu', ‘canceled’, '2024-08-10 23:59:59' ),
+  ( 'lee', ‘lee@email’,'$2a$12$Z/KqOM412KpQFULhBf4HO.lToA5h.JfEt3XVHDG39TvbdmiLI4lJa', ‘expired’, '2024-10-15 23:59:59'),
 
 
-INSERT INTO `rating` (`username`, `songID`, `userRating`)
-VALUES
-    ('Ali', 3, 4.0),
-    ('Ben', 2, 4.5),
-    ('Eve', 1, 5.0),
-    ('Mia', 4, 3.5),
-    ('Ali', 2, 4.5),
-    ('Ali', 1, 1.0),
-    ('Mia', 1, 3.0),
-    ('Ben', 5, 4.0);
+INSERT INTO ratings (userId, songId, rating) VALUES
+     (1, 1, 5), (1, 5, 4), (1, 9, 5), (1, 15, 3), (1, 20, 4),
+     (2, 2, 4), (2, 6, 5), (2, 10, 4), (2, 16, 5), (2, 21, 3),
+     (3, 3, 3), (3, 7, 4), (3, 11, 3), (3, 17, 4), (3, 22, 5),
+     (4, 4, 5), (4, 8, 5), (4, 12, 4), (4, 18, 5), (4, 23, 4),
+     (5, 1, 4), (5, 9, 5), (5, 13, 5), (5, 19, 3), (5, 24, 4),
+     (6, 2, 5), (6, 10, 4), (6, 14, 4), (6, 20, 5), (6, 25, 3),
+     (7, 3, 4), (7, 11, 5), (7, 15, 3), (7, 21, 4), (7, 26, 5),
+     (8, 4, 5), (8, 12, 4), (8, 16, 5), (8, 22, 4), (8, 27, 3),
+     (9, 5, 3), (9, 13, 4), (9, 17, 5), (9, 23, 5), (9, 28, 4),
+     (10, 6, 4), (10, 14, 5), (10, 18, 4), (10, 24, 3), (10, 29, 5);

@@ -42,21 +42,25 @@ CREATE TABLE subscription (
 );
 
 CREATE TABLE users (
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    userType TINYINT NOT NULL DEFAULT 1 COMMENT '1 for general user, 2 for admin',
-    PRIMARY KEY (username)
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       username VARCHAR(50) NOT NULL UNIQUE,
+       email VARCHAR(100) NOT NULL UNIQUE,
+       passwordHash VARCHAR(255) NOT NULL,
+      subscriptionStatus VARCHAR(20) NOT NULL DEFAULT 'expired',
+      subscriptionExpiry DATETIME,
+      createdDate DATETIME DEFAULT CURRENT_TIMESTAMP
+
 );
 
 
-CREATE TABLE rating (
-     username VARCHAR(50) NOT NULL,
-     songID INT NOT NULL,
-     userRating DECIMAL(2,1) NOT NULL,
-     PRIMARY KEY (username, songID),
-     FOREIGN KEY (username) REFERENCES users(username)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-     FOREIGN KEY (songID) REFERENCES songs(songID)
-     ON UPDATE CASCADE ON DELETE CASCADE
+CREATE TABLE ratings (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     userId INT NOT NULL,
+     songId INT NOT NULL,
+     rating INT NOT NULL,
+     ratedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (userId) REFERENCES users(id),
+     FOREIGN KEY (songId) REFERENCES songs(id),
+     UNIQUE (userId, songId)
+
 );
