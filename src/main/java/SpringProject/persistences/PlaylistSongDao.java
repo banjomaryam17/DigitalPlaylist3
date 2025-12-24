@@ -10,7 +10,6 @@ import java.util.List;
  * Data Access Object interface for PlaylistSong operations
  * Handles adding and retrieving songs in playlists
  *
- * @author [Your Name]
  */
 public interface PlaylistSongDao {
 

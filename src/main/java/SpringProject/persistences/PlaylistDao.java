@@ -3,14 +3,10 @@ import SpringProject.entities.Playlists;
 
 import java.sql.SQLException;
 import java.util.List;
-
-
-
     /**
      * Data Access Object interface for Playlist operations
      * Handles CRUD operations for playlists in the music library
      *
-     * @author [Your Name]
      */
     public interface PlaylistDao {
         void closeConnection();

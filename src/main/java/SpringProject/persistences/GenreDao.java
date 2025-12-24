@@ -13,7 +13,7 @@ import java.util.List;
          * @param genre The genre object containing genre details (name, description)
          * @return The created Genre object with the generated ID, or null if creation failed
          * @throws SQLException if a database access error occurs, the SQL statement fails,
-         *                      or a genre with the same name already exists (UNIQUE constraint violation)
+         *  or a genre with the same name already exists (UNIQUE constraint violation)
          */
         public Genre create(Genre genre) throws SQLException;
 
