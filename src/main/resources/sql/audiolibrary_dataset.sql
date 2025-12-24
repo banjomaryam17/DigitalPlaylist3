@@ -75,16 +75,16 @@ INSERT INTO playlist_songs (playlist_id, song_id, position_in_playlist) VALUES
 (12, 15, 3),
 (12, 27, 4);
 
-INSERT INTO `subscription` (`username`, `sub_startDate`, `sub_endDate`)
+INSERT INTO subscription (`username`, `sub_startDate`, `sub_endDate`)
 VALUES
     ('Aisha',  '2025-11-01 00:00:00', '2026-11-01 00:00:00'),
     ('Liam',   '2025-03-10 00:00:00', '2026-03-10 00:00:00'),
     ('Ciara',  '2024-12-15 00:00:00', '2025-12-15 00:00:00');
 
-NSERT INTO users (username, email, password_hash, subscription_status, subscription_expiry) VALUES
-  ('athena',’athena@email’,'$2a$12$MfrThbMXfkuVoaUKFc0gWO99v7iUGc/KmEhh0nOgbl5CjBu5719by',’active’, '2026-12-31 23:59:59'),
-  ( 'helo', ‘helo@email’, '$2a$12$a/5xFCTok30DeFrLmBfP.OrqaQuRFMOxfCpM9Afh7tBI75.XTD1Nu', ‘canceled’, '2024-08-10 23:59:59' ),
-  ( 'lee', ‘lee@email’,'$2a$12$Z/KqOM412KpQFULhBf4HO.lToA5h.JfEt3XVHDG39TvbdmiLI4lJa', ‘expired’, '2024-10-15 23:59:59'),
+INSERT INTO users (username, email, password_hash, subscription_status, subscription_expiry) VALUES
+  ('athena','athena@email','$2a$12$MfrThbMXfkuVoaUKFc0gWO99v7iUGc/KmEhh0nOgbl5CjBu5719by','active', '2026-12-31 23:59:59'),
+  ( 'helo', 'helo@email', '$2a$12$a/5xFCTok30DeFrLmBfP.OrqaQuRFMOxfCpM9Afh7tBI75.XTD1Nu', 'canceled', '2024-08-10 23:59:59'),
+  ( 'lee', 'lee@email','$2a$12$Z/KqOM412KpQFULhBf4HO.lToA5h.JfEt3XVHDG39TvbdmiLI4lJa', 'expired', '2024-10-15 23:59:59'),
 
 
 INSERT INTO ratings (userId, songId, rating) VALUES
