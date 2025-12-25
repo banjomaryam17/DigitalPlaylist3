@@ -5,7 +5,9 @@ import jakarta.validation.constraints.*;
 import java.util.Objects;
 
 @Getter
+@Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
