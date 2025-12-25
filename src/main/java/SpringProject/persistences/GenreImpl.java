@@ -19,9 +19,6 @@ public class GenreImpl implements GenreDao {
 
     private Connector connector;
 
-    /**
-     * @param connector Database connector to use for connections
-     */
     public GenreImpl(Connector connector) {
         this.connector = connector;
     }

@@ -6,6 +6,9 @@ import java.util.Date;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Builder
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Playlists {

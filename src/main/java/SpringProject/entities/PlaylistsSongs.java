@@ -5,8 +5,10 @@ import jakarta.validation.constraints.*;
 import java.util.*;
 
 @Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@NonNull
 @AllArgsConstructor
 
 public class PlaylistsSongs {
