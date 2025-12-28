@@ -49,7 +49,7 @@ public class GenreImpl implements GenreDao {
         }
 
         try (PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO genres (name, description) VALUES (?, ?)",
+                "INSERT INTO genres(name, description) VALUES (?, ?)",
                 Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, genre.getName());

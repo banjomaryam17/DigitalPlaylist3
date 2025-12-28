@@ -45,7 +45,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
             throw new SQLException("create(): Could not establish connection to database.");
         }
 
-        String sql = "INSERT INTO playlists (name, description, user_id, is_public) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO playlists (name, description, userId, isPublic) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -124,7 +124,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
         ArrayList<Playlists> playlists = new ArrayList<>();
 
         try (PreparedStatement ps =
-                     conn.prepareStatement("SELECT * FROM playlists WHERE user_id = ?")) {
+                     conn.prepareStatement("SELECT * FROM playlists WHERE userId = ?")) {
 
             ps.setInt(1, userId);
 
@@ -166,8 +166,8 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
         String sql = """
                 SELECT * FROM playlists
-                WHERE user_id = ?
-                   OR is_public = TRUE
+                WHERE userId = ?
+                   OR isPublic = TRUE
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -214,7 +214,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
         String sql = """
                 UPDATE playlists
-                SET name = ?, description = ?, is_public = ?
+                SET name = ?, description = ?, isPublic = ?
                 WHERE id = ?
                 """;
 

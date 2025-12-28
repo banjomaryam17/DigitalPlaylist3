@@ -34,7 +34,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
             throw new SQLException("addSongToPlaylist(): Could not establish connection to database.");
         }
 
-        String sql = "INSERT INTO playlist_songs (playlist_id, song_id) VALUES (?, ?)";
+        String sql = "INSERT INTO playlistSongs (playlistId, songId) VALUES (?, ?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -76,7 +76,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
 
         ArrayList<PlaylistsSongs> songs = new ArrayList<>();
 
-        String sql = "SELECT * FROM playlist_songs WHERE playlist_id = ?";
+        String sql = "SELECT * FROM playlistSongs WHERE playlistId = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -115,7 +115,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
 
         int rowsDeleted = 0;
 
-        String sql = "DELETE FROM playlist_songs WHERE playlist_id = ? AND song_id = ?";
+        String sql = "DELETE FROM playlistSongs WHERE playlistId = ? AND songId = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -146,7 +146,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
             throw new SQLException("isSongInPlaylist(): Could not establish connection.");
         }
 
-        String sql = "SELECT COUNT(*) AS count FROM playlist_songs WHERE playlist_id = ? AND song_id = ?";
+        String sql = "SELECT COUNT(*) AS count FROM playlistSongs WHERE playlistId = ? AND songId = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -185,7 +185,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
 
         ArrayList<Integer> playlistIds = new ArrayList<>();
 
-        String sql = "SELECT playlist_id FROM playlist_songs WHERE song_id = ?";
+        String sql = "SELECT playlistId FROM playlistSongs WHERE songId = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, songId);
@@ -223,7 +223,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
 
         int deletedRows = 0;
 
-        String sql = "DELETE FROM playlist_songs WHERE playlist_id = ?";
+        String sql = "DELETE FROM playlistSongs WHERE playlistId = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
