@@ -1,24 +1,18 @@
 package SpringProject.persistences;
-import java.util.ArrayList;
-
 
 import SpringProject.entities.Rating;
+import SpringProject.entities.Song;
 
-public  interface RatingDao {
+import java.sql.SQLException;
+import java.util.ArrayList;
 
+public interface RatingDao {
 
-     public   int addRating (RatingDao rating );  // the public boolen implement RatingSong
+    int addRating(Rating rating) throws SQLException;
 
+    ArrayList<Rating> getAllRatings() throws SQLException;
 
-    public ArrayList<Rating> getAllRatings();
+    Rating findRatingByUsernameAndSongID(String username, int songID) throws SQLException;
 
-      public Song getTopRatedSong();
-      public Song getMostPopularSong();
-
-
-      public Song getLowestRatedSong();
-      public Rating findRatingByUsernameAndSongID(String username, int songID);
-
-    public ArrayList<Rating> getUserRatingFromUsername(String username);
-
+    ArrayList<Rating> getUserRatingFromUsername(String username) throws SQLException;
 }

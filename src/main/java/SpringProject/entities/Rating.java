@@ -1,6 +1,5 @@
 package SpringProject.entities;
 
-
 import lombok.*;
 
 @Getter
@@ -10,24 +9,20 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Rating implements Comparable<Rating> {
 
+    // unique rating is  it will be  username + songID
     @EqualsAndHashCode.Include
     private String username;
+
+    @EqualsAndHashCode.Include
     private int songID;
+
     private double userRating;
 
+    // Sort by rating low to high
     @Override
     public int compareTo(Rating o) {
-
-         int y= 0;
-          if (this.userRating > o.userRating) {
-               return y=1;
-          } else if (this.userRating < o.userRating) {
-              y = 0;
-          }
-        return 0;
+        return Double.compare(this.userRating, o.userRating);
     }
 }
-
