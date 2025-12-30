@@ -11,6 +11,7 @@ import java.util.*;
 @ToString
 @NonNull
 @AllArgsConstructor
+@NoArgsConstructor
 
 public class PlaylistsSongs {
 // id, playlistId, songId,addedDate, positionInPlaylist

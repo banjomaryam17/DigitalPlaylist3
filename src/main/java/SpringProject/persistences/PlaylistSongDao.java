@@ -12,6 +12,7 @@ import java.util.List;
  *
  */
 public interface PlaylistSongDao {
+    void closeConnection();
     PlaylistsSongs addSongToPlaylist(PlaylistsSongs playlistSong) throws SQLException;
     List<PlaylistsSongs> getSongsByPlaylistId(int id) throws SQLException;
     boolean removeSongFromPlaylist(int id, int songId) throws SQLException;

@@ -16,6 +16,11 @@ public class PlaylistSongImpl implements PlaylistSongDao {
         this.connector = connector;
     }
 
+    @Override
+    public void closeConnection() {
+        connector.freeConnection();
+    }
+
     /**
      * Add a song to a playlist
      *
