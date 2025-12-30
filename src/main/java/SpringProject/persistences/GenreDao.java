@@ -12,6 +12,7 @@ import java.util.List;
         public List<Genre> findAll() throws SQLException;
         public boolean update(Genre genre) throws SQLException;
         public boolean delete(int id) throws SQLException;
+
     }
 
 
