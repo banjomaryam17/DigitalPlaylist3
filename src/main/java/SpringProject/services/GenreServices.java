@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
+@Service
 public class GenreServices {
     private GenreDao genreDao;
 

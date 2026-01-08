@@ -15,6 +15,7 @@ import java.util.List;
  * @author [Maryam]
  */
 @Slf4j
+@Repository
 public class GenreImpl implements GenreDao {
 
     private Connector connector;

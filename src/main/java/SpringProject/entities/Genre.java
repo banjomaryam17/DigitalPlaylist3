@@ -1,4 +1,5 @@
 package SpringProject.entities;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
@@ -15,7 +16,7 @@ import java.util.Objects;
 public class Genre implements Comparable<Genre> {
 //    id,name,description
 
-    @NonNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
     @NonNull
