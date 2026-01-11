@@ -15,4 +15,10 @@ public interface RatingDao {
     Rating findRatingByUsernameAndSongID(String username, int songID) throws SQLException;
 
     ArrayList<Rating> getUserRatingFromUsername(String username) throws SQLException;
+
+    Song getLowestRatedSong();
+
+    Song getMostPopularSong();
+
+    Song getTopRatedSong();
 }
