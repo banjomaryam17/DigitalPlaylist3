@@ -1,7 +1,8 @@
 package SpringProject.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 

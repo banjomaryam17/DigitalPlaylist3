@@ -6,6 +6,7 @@ import SpringProject.entities.Playlists;
 import SpringProject.entities.PlaylistsSongs;
 import SpringProject.persistences.PlaylistDao;
 import SpringProject.persistences.PlaylistSongDao;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 /* @author [Maryam]*/
 
 @Slf4j
+@Service
 public class PlaylistServices {
     private PlaylistDao playlistDao;
     private PlaylistSongDao playlistSongDao;
@@ -168,7 +170,7 @@ public class PlaylistServices {
         }
 
         // If playlist is private, only owner can add songs
-        if (!targetPlaylist.isPublic() && targetPlaylist.getUserId() != requestingUserId) {
+        if (!targetPlaylist.getIsPublic() && targetPlaylist.getUserId() != requestingUserId) {
             log.warn("User {} attempted to add song to private playlist {} owned by user {}",
                     requestingUserId, playlistId, targetPlaylist.getUserId());
             throw new IllegalStateException("You can only add songs to your own private playlists");
@@ -323,7 +325,7 @@ public class PlaylistServices {
         for (Playlists playlist : allPlaylists) {
             if (playlist.getId() == playlistId) {
                 // Can modify if owner OR if playlist is public
-                return playlist.getUserId() == userId || playlist.isPublic();
+                return playlist.getUserId() == userId || playlist.getIsPublic();
             }
         }
 

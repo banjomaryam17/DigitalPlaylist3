@@ -2,12 +2,14 @@ package SpringProject.persistences;
 
 import lombok.extern.slf4j.Slf4j;
 import SpringProject.entities.PlaylistsSongs;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Repository
 public class PlaylistSongImpl implements PlaylistSongDao {
 
     private Connector connector;
@@ -246,8 +248,8 @@ public class PlaylistSongImpl implements PlaylistSongDao {
     private static PlaylistsSongs mapPlaylistSongRow(ResultSet rs) throws SQLException {
         return PlaylistsSongs.builder()
                 .id(rs.getInt("id"))
-                .playlistId(rs.getInt("playlist_id"))
-                .songId(rs.getInt("song_id"))
+                .playlistId(rs.getInt("playlistId"))
+                .songId(rs.getInt("songId"))
                 .build();
     }
 }

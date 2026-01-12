@@ -1,4 +1,5 @@
 package SpringProject.entities;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import jakarta.validation.constraints.*;
 
@@ -14,25 +15,19 @@ import java.util.Date;
 public class Playlists {
 //    id,userId,name,description,isPublic,createdAt
     @EqualsAndHashCode.Include
-    @NonNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @NotBlank(message= "Id is required")
-    private int id;
+    private Integer id;
 
     @EqualsAndHashCode.Include
     @NonNull
-    @NotBlank(message = "userId id required")
-    private int userId;
-
-    @NonNull
+    private Integer userId;
+    @NotBlank(message = "name is required")
     private String name;
-
-    @NonNull
     private String description;
+    private Boolean isPublic;
 
-    @NonNull
-    private boolean isPublic;
-
-    @NonNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date createdAt;
 
 }

@@ -2,6 +2,7 @@ package SpringProject.persistences;
 
 import lombok.extern.slf4j.Slf4j;
 import SpringProject.entities.Playlists;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author [Maryam]
  */
+@Repository
 @Slf4j
 public class PlaylistDaoImpl implements PlaylistDao {
 
@@ -52,7 +54,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
             ps.setString(1, playlists.getName());
             ps.setString(2, playlists.getDescription());
             ps.setInt(3, playlists.getUserId());
-            ps.setBoolean(4, playlists.isPublic());
+            ps.setBoolean(4, playlists.getIsPublic());
 
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted == 0) {
@@ -222,7 +224,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
             ps.setString(1, playlists.getName());
             ps.setString(2, playlists.getDescription());
-            ps.setBoolean(3, playlists.isPublic());
+            ps.setBoolean(3, playlists.getIsPublic());
             ps.setInt(4, playlists.getId());
 
             rowsUpdated = ps.executeUpdate();
@@ -271,8 +273,9 @@ public class PlaylistDaoImpl implements PlaylistDao {
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
-                .userId(rs.getInt("user_id"))
-                .isPublic(rs.getBoolean("is_public"))
+                .userId(rs.getInt("userId"))
+                .isPublic(rs.getBoolean("isPublic"))
+                .createdAt(rs.getTimestamp("createdDate"))
                 .build();
     }
 }
