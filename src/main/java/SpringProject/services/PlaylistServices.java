@@ -73,7 +73,7 @@ public class PlaylistServices {
     }
 
     /**
-     * @param userId The userId assocated with this playlist
+     * @param userId The userId associated with this playlist
      * @return The playlists only visible to this particular ID
      * @throws SQLException if database access occurs
      */
