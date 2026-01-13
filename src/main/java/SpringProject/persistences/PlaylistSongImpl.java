@@ -199,7 +199,7 @@ public class PlaylistSongImpl implements PlaylistSongDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    playlistIds.add(rs.getInt("playlist_id"));
+                    playlistIds.add(rs.getInt("playlistId"));
                 }
             } catch (SQLException e) {
                 log.error("getPlaylistsContainingSong(): Error processing resultset. \nException: {}", e.getMessage());

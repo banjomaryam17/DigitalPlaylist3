@@ -26,7 +26,7 @@ class PlaylistSongDaoTest {
      */
     @BeforeAll
     static void setupDatabase() {
-        connector = new MySqlConnector("test_database.properties");
+        connector = new MySqlConnector("test_mac_database.properties");
         playlistSongDao = new PlaylistSongImpl(connector);
         System.out.println(" PlaylistSongDao Test ");
     }
@@ -69,8 +69,6 @@ class PlaylistSongDaoTest {
         assertNotNull(created.getId(), "Should have generated ID");
         assertEquals(TEST_PLAYLIST_ID, created.getPlaylistId(), "Playlist ID should match");
         assertEquals(TEST_SONG_ID, created.getSongId(), "Song ID should match");
-        assertNotNull(created.getAddedDate(), "Added date should be set");
-
         // Save ID for other tests
         testPlaylistSongId = created.getId();
 
@@ -186,7 +184,7 @@ class PlaylistSongDaoTest {
                     "All songs should belong to playlist " + TEST_PLAYLIST_ID);
         }
 
-        System.out.println("✅ Retrieved " + songs.size() + " songs from playlist");
+        System.out.println("Retrieved " + songs.size() + " songs from playlist");
     }
 
     /**

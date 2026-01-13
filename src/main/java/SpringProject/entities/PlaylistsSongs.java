@@ -26,8 +26,6 @@ public class PlaylistsSongs {
 
     @NonNull
     private int songId;
-
-    @NonNull
     private Date addedDate;
 
     @NonNull
