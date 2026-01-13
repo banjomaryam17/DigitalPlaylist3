@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS audiolibrary;
-CREATE DATABASE audiolibrary;
+DROP DATABASE IF EXISTS test_audiolibrary;
+CREATE DATABASE test_audiolibrary;
 USE test_audiolibrary;
 
 CREATE TABLE genres

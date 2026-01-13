@@ -26,8 +26,6 @@ public class Playlists {
     private String name;
     private String description;
     private Boolean isPublic;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date createdAt;
 
 }
