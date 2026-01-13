@@ -1,6 +1,4 @@
 package SpringProject.persistences;
-import SpringProject.persistences.Connector;
-import SpringProject.persistences.MySqlConnector;
 import SpringProject.entities.Genre;
 import org.junit.jupiter.api.*;
 
@@ -195,11 +193,9 @@ class GenreDaoTest {
         System.out.println("✅ Correctly handled zero ID");
     }
 
-    // ========== FIND ALL TESTS ==========
-
     /**
      * Test retrieving all genres
-     * Should return a list (may be empty or contain genres)
+     * Should return a list ( empty or contain genres)
      */
     @Test
     @Order(9)
@@ -213,7 +209,7 @@ class GenreDaoTest {
         assertNotNull(genres, "Genres list should not be null");
         assertTrue(genres.size() > 0, "Should have at least the test genre we created");
 
-        System.out.println("✅ Retrieved " + genres.size() + " genres");
+        System.out.println("Retrieved " + genres.size() + " genres");
 
         // Print first few genres for verification
         genres.stream().limit(3).forEach(g ->
@@ -258,7 +254,7 @@ class GenreDaoTest {
     @Test
     @Order(11)
     void testUpdate_NonExistentGenre() throws SQLException {
-        System.out.println("Test: Update - Non-Existent Genre");
+        System.out.println("Test: Update Non-Existent Genre");
 
         // Arrange
         Genre genre = Genre.builder()
@@ -283,34 +279,28 @@ class GenreDaoTest {
     @Test
     @Order(12)
     void testUpdate_NullGenre() {
-        System.out.println("Test: Update - Null Genre");
+        System.out.println("Test: Update Null Genre");
 
-        // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
             genreDao.update(null);
         }, "Should throw IllegalArgumentException for null genre");
 
-        System.out.println("✅ Correctly rejected null genre");
+        System.out.println("Correctly rejected null genre");
     }
     @Test
-    @Order(14)
+    @Order(13)
     void testUpdate_InvalidId() throws SQLException {
         System.out.println("Test: Update - Invalid ID");
 
-        // Arrange
         Genre genre = Genre.builder()
                 .id(0)
                 .name("Invalid")
                 .description("Invalid ID")
                 .build();
-
-        // Act
         boolean updated = genreDao.update(genre);
-
-        // Assert
         assertFalse(updated, "Update should return false for invalid ID");
 
-        System.out.println("✅ Correctly rejected invalid ID");
+        System.out.println("Correctly rejected invalid ID");
     }
 
     /**
@@ -320,9 +310,8 @@ class GenreDaoTest {
     @Test
     @Order(14)
     void testUpdate_DuplicateName() throws SQLException {
-        System.out.println("Test: Update - Duplicate Name");
-
-        // Arrange - Create two genres
+        System.out.println("Test: Update Duplicate Name");
+        //Create two genres
         String existingName = "Existing " + System.currentTimeMillis();
         Genre genre1 = genreDao.create(Genre.builder()
                 .name(existingName)
@@ -333,19 +322,14 @@ class GenreDaoTest {
                 .name("Original " + System.currentTimeMillis())
                 .description("Second")
                 .build());
-
-        // Try to update genre2 to have same name as genre1
+        // update genre2 to have same name as genre1
         genre2.setName(existingName);
-
-        // Act & Assert
         assertThrows(SQLException.class, () -> {
             genreDao.update(genre2);
         }, "Should throw SQLException for duplicate name");
 
-        System.out.println("✅ Correctly rejected duplicate name on update");
+        System.out.println("Correctly rejected duplicate name on update");
     }
-
-    // ========== DELETE TESTS ==========
 
     /**
      * Test deleting an existing genre (not referenced by songs/albums)
@@ -354,25 +338,20 @@ class GenreDaoTest {
     @Test
     @Order(15)
     void testDelete_ExistingGenre() throws SQLException {
-        System.out.println("Test: Delete - Existing Genre");
-
-        // Arrange - Create a genre to delete
+        System.out.println("Test: Delete Existing Genre");
+// Create a genre to delete
         Genre genre = genreDao.create(Genre.builder()
                 .name("Delete Test " + System.currentTimeMillis())
                 .description("Will be deleted")
                 .build());
-
-        // Act
         boolean deleted = genreDao.delete(genre.getId());
-
-        // Assert
         assertTrue(deleted, "Delete should return true");
 
         // Verify it's deleted
         Genre found = genreDao.findById(genre.getId());
         assertNull(found, "Genre should no longer exist");
 
-        System.out.println("✅ Successfully deleted genre");
+        System.out.println(" Successfully deleted genre");
     }
 
     /**
@@ -390,7 +369,7 @@ class GenreDaoTest {
         // Assert
         assertFalse(deleted, "Delete should return false for non-existent genre");
 
-        System.out.println("✅ Correctly returned false for non-existent genre");
+        System.out.println(" Correctly returned false for non-existent genre");
     }
 
     /**
@@ -406,14 +385,11 @@ class GenreDaoTest {
         assertFalse(genreDao.delete(-1), "Should return false for negative ID");
         assertFalse(genreDao.delete(0), "Should return false for zero ID");
 
-        System.out.println("✅ Correctly handled invalid IDs");
+        System.out.println("Correctly handled invalid IDs");
     }
-
-    // ========== INTEGRATION TESTS ==========
-
     /**
      * Test complete CRUD cycle
-     * Create → Read → Update → Delete
+     * Create, Read, Update, Delete
      */
     @Test
     @Order(19)
@@ -451,7 +427,7 @@ class GenreDaoTest {
         assertNull(afterDelete);
         System.out.println("  ✓ Deleted genre");
 
-        System.out.println("✅ Complete CRUD cycle successful");
+        System.out.println("Complete CRUD cycle successful");
     }
 
     /**
@@ -463,7 +439,6 @@ class GenreDaoTest {
     void testMultipleGenres_Create() throws SQLException {
         System.out.println("Test: Multiple Genres - Create");
 
-        // Arrange & Act - Create 3 genres
         Genre g1 = genreDao.create(Genre.builder()
                 .name("Multi Test 1 " + System.currentTimeMillis())
                 .description("First genre")
