@@ -18,7 +18,7 @@ public class Genre implements Comparable<Genre> {
 //    id,name,description
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private Integer id;
 
     @NonNull
     @NotBlank(message = "Genre name is required")
