@@ -1,13 +1,16 @@
 package SpringProject.persistences;
 
 import SpringProject.entities.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
+@Slf4j
+@Repository
 public class UserDaoImpl implements UserDao {
+
+    private static final int DUPLICATE_KEY_ERROR_CODE = 1062;
 
     private final Connector connector;
 
@@ -15,130 +18,69 @@ public class UserDaoImpl implements UserDao {
         this.connector = connector;
     }
 
-    /**
-     * Checks if a user exists with the given email and password
-     *
-     * @param email user's email
-     * @param password user's password
-     * @return true if a matching user is found, otherwise false
-     */
+
+    public void closeConnection() {
+        connector.freeConnection();
+    }
+
     @Override
     public boolean loginUser(String email, String password) {
+        if (email == null || password == null) return false;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return false;
+
         String sql = "SELECT 1 FROM users WHERE email = ? AND password = ?";
 
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, password);
 
-            ResultSet rs = ps.executeQuery();
-            return rs.next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
 
         } catch (SQLException e) {
+            log.error("loginUser() failed: {}", e.getMessage());
             return false;
         }
     }
 
-    /**
-     * Logs in a user using username and password
-     *
-     * @param username user's username
-     * @param password user's password
-     * @return the matching {@link User}, or null if login fails
-     */
     @Override
-    public User login(String username, String password) {
-        String sql = "SELECT username, email, password, userType FROM users WHERE username = ? AND password = ?";
-
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, username);
-            ps.setString(2, password);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapUser(rs);
-            }
-
-        } catch (SQLException e) {
-            return null;
-        }
-
-        return null;
-    }
-
-
-
-    /**
-     * Finds a user by username
-     *
-     * @param username username to search for
-     * @return the matching {@link User}, or null if not found
-     */    @Override
     public User findUserByUsername(String username) {
-        String sql = "SELECT username, email, password, userType FROM users WHERE username = ?";
+        if (username == null || username.isBlank()) return null;
 
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = connector.getConnection();
+        if (conn == null) return null;
 
+        String sql = "SELECT * FROM users WHERE username = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
 
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapUser(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapUserRow(rs);
+                }
             }
 
         } catch (SQLException e) {
-            return null;
+            log.error("findUserByUsername() failed: {}", e.getMessage());
         }
 
         return null;
     }
 
-    /**
-     * Finds a user by email
-     * <p>
-     * Method name kept the same as the interface ({@code findUserByThereEmail}).
-     * </p>
-     *
-     * @param email email to search for
-     * @return the matching {@link User}, or null if not found
-     */
-    @Override
-    public User findUserByThereEmail(String email) {
-        String sql = "SELECT username, email, password, userType FROM users WHERE email = ?";
-
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapUser(rs);
-            }
-
-        } catch (SQLException e) {
-            return null;
-        }
-
-        return null;
-    }
-
-    /**
-     * Registers a new user.
-     *
-     * @param newUser user to insert
-     * @return 1 if inserted, 0 if insert failed
-     */
     @Override
     public int registerUser(User newUser) {
+        if (newUser == null) return 0;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return 0;
+
         String sql = "INSERT INTO users (username, email, password, userType) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, newUser.getUsername());
             ps.setString(2, newUser.getEmail());
@@ -148,78 +90,114 @@ public class UserDaoImpl implements UserDao {
             return ps.executeUpdate();
 
         } catch (SQLException e) {
+            if (e.getErrorCode() == DUPLICATE_KEY_ERROR_CODE) {
+                log.warn("registerUser(): duplicate user/email: {}", e.getMessage());
+                return -1;
+            }
+            log.error("registerUser() failed: {}", e.getMessage());
             return 0;
         }
     }
 
-    /**
-     * Updates the email for a given username.
-     *
-     * @param email new email
-     * @param username user to update
-     * @return true if updated, false if no row was changed
-     * @throws RuntimeException if the update fails
-     */
+    @Override
+    public User findUserByThereEmail(String email) {
+        if (email == null || email.isBlank()) return null;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return null;
+
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapUserRow(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("findUserByThereEmail() failed: {}", e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public User login(String username, String password) {
+        if (username == null || password == null) return null;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return null;
+
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapUserRow(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("login() failed: {}", e.getMessage());
+        }
+
+        return null;
+    }
+
     @Override
     public boolean updateUserEmail(String email, String username) throws RuntimeException {
+        if (email == null || email.isBlank() || username == null || username.isBlank()) return false;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return false;
+
         String sql = "UPDATE users SET email = ? WHERE username = ?";
 
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, username);
 
-            return ps.executeUpdate() > 0;
+            return ps.executeUpdate() == 1;
 
         } catch (SQLException e) {
-            throw new RuntimeException("updateUserEmail failed: " + e.getMessage());
+            log.error("updateUserEmail() failed: {}", e.getMessage());
+            throw new RuntimeException("Database error updating email");
         }
     }
 
-
-    /**
-     * Updates the password for a given username
-     *
-     * @param password new password
-     * @param username user to update
-     * @return true if updated, false if no row was changed
-     * @throws RuntimeException if the update fails
-     */
     @Override
     public boolean updateUserPassword(String password, String username) throws RuntimeException {
+        if (password == null || password.isBlank() || username == null || username.isBlank()) return false;
+
+        Connection conn = connector.getConnection();
+        if (conn == null) return false;
+
         String sql = "UPDATE users SET password = ? WHERE username = ?";
 
-        try (Connection conn = connector.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, password);
             ps.setString(2, username);
 
-            return ps.executeUpdate() > 0;
+            return ps.executeUpdate() == 1;
 
         } catch (SQLException e) {
-            throw new RuntimeException("updateUserPassword failed: " + e.getMessage());
+            log.error("updateUserPassword() failed: {}", e.getMessage());
+            throw new RuntimeException("Database error updating password");
         }
     }
 
-    /**
-     * Maps the current {@link ResultSet} row to a {@link User} object.
-     *
-     * @param rs result set positioned on a row
-     * @return mapped {@link User}
-     * @throws SQLException if reading columns fails
-     */
-    private User mapUser(ResultSet rs) throws SQLException {
-        String username = rs.getString("username");
-        String email = rs.getString("email");
-        String password = rs.getString("password");
-        int userType = rs.getInt("userType");
-
-        return new User(username, email, password, userType);
+    private static User mapUserRow(ResultSet rs) throws SQLException {
+        return User.builder()
+                .username(rs.getString("username"))
+                .email(rs.getString("email"))
+                .password(rs.getString("password"))
+                .userType(rs.getInt("userType"))
+                .build();
     }
 }
-
-
-
-
