@@ -133,6 +133,21 @@ public class RatingDaoImpl implements RatingDao {
         return (id == null) ? emptySong() : songWithId(id);
     }
 
+    @Override
+    public Song getLowestRatedSong() {
+        return null;
+    }
+
+    @Override
+    public Song getMostPopularSong() {
+        return null;
+    }
+
+    @Override
+    public Song getTopRatedSong() {
+        return null;
+    }
+
 
     private Rating mapRatingRow(ResultSet rs) throws SQLException {
         return Rating.builder()

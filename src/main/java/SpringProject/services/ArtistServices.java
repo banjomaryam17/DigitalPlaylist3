@@ -19,14 +19,28 @@ public class ArtistServices {
         this.albumDao = albumDao;
     }
 
+    /**
+     * searches for all artist and returns them as a list
+     * @return returns a list of artists with every entry\
+     */
     public List<Artist> getAllArtists() {
         return artistDao.getAllArtists();
     }
 
+    /**
+     * searches by artist with unique id
+     * @param id unique to each artist
+     * @return all info retaining to artist
+     */
     public Artist getArtistById(int id) {
         return artistDao.getArtistById(id);
     }
 
+    /**
+     * searches for albums by an artists specific id
+     * @param artistId unique to each artist
+     * @return all album information relating to the artist
+     */
     public List<Album> getAlbumsByArtist(int artistId) {
         return artistDao.getAlbumsByArtist(artistId);
     }

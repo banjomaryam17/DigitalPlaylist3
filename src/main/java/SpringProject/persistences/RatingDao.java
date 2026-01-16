@@ -22,3 +22,4 @@ public interface RatingDao {
 
     Song getTopRatedSong();
 }
+

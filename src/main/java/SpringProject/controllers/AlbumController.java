@@ -18,13 +18,21 @@ public class AlbumController {
         this.albumServices = albumServices;
     }
 
+    /** get album vis artist unique id
+     * @param artistId unique id belonging to each artist
+     * @return all albums relating to the artist
+     */
     // Get albums by artist
     @GetMapping("/artist/{artistId}")
     public ResponseEntity<List<Album>> getAlbumsByArtist(@PathVariable int artistId) {
         return ResponseEntity.ok(albumServices.getAlbumsByArtist(artistId));
     }
 
-    // Get album by ID
+    /**
+     * get album by album unique id
+     * @param id corresponding to the individual album
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getAlbumById(@PathVariable int id) {
         Album album = albumServices.getAlbumById(id);

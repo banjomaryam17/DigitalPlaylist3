@@ -20,11 +20,19 @@ public class ArtistController {
         this.artistService = artistService;
     }
 
+    /**
+     * @return a list of all artists
+     */
     @GetMapping
     public ResponseEntity<List<Artist>> getAllArtists() {
         return ResponseEntity.ok(artistService.getAllArtists());
     }
 
+    /**
+     * search by id to find an artist
+     * @param id the id of the artist you want to find
+     * @return artist entity
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getArtist(@PathVariable int id) {
         try {
@@ -35,6 +43,11 @@ public class ArtistController {
         }
     }
 
+    /**
+     *get album by artist id
+     * @param id corresponding to the artist
+     * @return returns all albums by artist
+     */
     @GetMapping("/{id}/albums")
     public ResponseEntity<?> getAlbumsByArtist(@PathVariable int id) {
         return ResponseEntity.ok(artistService.getAlbumsByArtist(id));

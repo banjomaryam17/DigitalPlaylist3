@@ -38,7 +38,7 @@ public class MySqlConnector implements Connector {
         //String username = "root";
         String username = properties.getProperty("username", "root");
         //String password = "";
-        String password = properties.getProperty("password", "root");
+        String password = properties.getProperty("password", "");
         try {
 //            load database driver
             Class.forName(driver);

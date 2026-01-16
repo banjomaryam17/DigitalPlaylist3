@@ -19,7 +19,11 @@ public class SongController {
         this.songServices = songServices;
     }
 
-    @GetMapping
+    /**
+     * getAll songs request, obtains a list with all songs in the database
+     * @return a list of all songs
+     */
+    @GetMapping("/getAll")
     public ResponseEntity<List<Song>> getAllSongs() {
         List<Song> songs = songServices.getAllSongs();
         if (songs.isEmpty()) {
@@ -28,6 +32,11 @@ public class SongController {
         return ResponseEntity.ok(songs);
     }
 
+    /**
+     * get the song related to the current song id
+     * @param id inputted will be validated and if there is a song with the same Id, it will be returned
+     * @return a sing with the same id as the param id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getSongById(@PathVariable int id) {
         Song song = songServices.getSongById(id);
@@ -37,7 +46,13 @@ public class SongController {
         return ResponseEntity.ok(song);
     }
 
-    @GetMapping("/search/title")
+
+    /**
+     * get the song related to the current song id
+     * @param title inputted will be validated and if there is a song with that name, the song entity will be returned
+     * @return a song with the same id as the param id
+     */
+    @GetMapping("/search/{title}")
     public ResponseEntity<List<Song>> searchByTitle(@RequestParam String title) {
         if (title == null || title.isBlank()) {
             return ResponseEntity.badRequest().build();
@@ -49,7 +64,12 @@ public class SongController {
         return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/search/artist")
+    /**
+     * search for songs related to the inputted artist
+     * @param artist inputted will be validated and if there is a song with the artist name, it will be returned
+     * @return a song with the same artist name as the param artist
+     */
+    @GetMapping("/search/artist/{artist}")
     public ResponseEntity<List<Song>> searchByArtist(@RequestParam String artist) {
         if (artist == null || artist.isBlank()) {
             return ResponseEntity.badRequest().build();
@@ -61,6 +81,11 @@ public class SongController {
         return ResponseEntity.ok(results);
     }
 
+    /**
+     * get all songs in a given album, if album doesnt exist returns bedRequest
+     * @param album
+     * @return
+     */
     @GetMapping("/search/album")
     public ResponseEntity<List<Song>> searchByAlbum(@RequestParam String album) {
         if (album == null || album.isBlank()) {
@@ -73,9 +98,14 @@ public class SongController {
         return ResponseEntity.ok(results);
     }
 
-
-    @GetMapping("/search/genre")
+    /**
+     * To search for songs with a specific genre within a list of Songs, if it doesnt exist or is empty/null it returns badRequest.
+     * @param genre the genre you want to search with
+     * @return list of songs relating to that genre
+     */
+    @GetMapping("/search/genre/{genre}")
     public ResponseEntity<List<Song>> searchByGenre(@RequestParam String genre) {
+        System.out.println(genre);
         if (genre == null || genre.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
