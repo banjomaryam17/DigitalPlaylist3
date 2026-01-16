@@ -4,6 +4,8 @@ import SpringProject.entities.User;
 import SpringProject.entities.User;
 
     public interface UserDao {
+        static void closeConnection() {
+        }
 
 
 // UserDaoClass
