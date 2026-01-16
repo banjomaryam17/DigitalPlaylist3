@@ -38,15 +38,15 @@ public class RatingController {
     }
     /**
      * Get all ratings for a given user
-     * @param username the username to search
+     * @param userId the username to search
      * @return ratings belonging to that user
      */
     @GetMapping(path = "/user/{username}", produces = "application/json")
-    public java.util.List<Rating> getRatingsForUser(@PathVariable String username) {
+    public java.util.List<Rating> getRatingsForUser(@PathVariable String userId) {
         try {
-            return ratingDao.getUserRatingFromUsername(username);
+            return ratingDao.getUserRatingFromUsername(userId);
         } catch (Exception e) {
-            log.error("Get ratings for user '{}' failed: {}", username, e.getMessage());
+            log.error("Get ratings for user '{}' failed: {}", userId, e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
         }
     }
