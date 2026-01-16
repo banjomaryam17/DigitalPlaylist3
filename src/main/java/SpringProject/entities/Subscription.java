@@ -20,4 +20,8 @@ public class Subscription {
     @EqualsAndHashCode.Exclude
     private LocalDateTime sub_startDate;
     private LocalDateTime sub_endDate;
+
+
+
+
 }
