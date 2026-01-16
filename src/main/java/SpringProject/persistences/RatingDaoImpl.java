@@ -1,20 +1,15 @@
 package SpringProject.persistences;
 
+import SpringProject.entities.Rating;
+import SpringProject.entities.Song;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+
 import java.sql.*;
 import java.util.ArrayList;
 
-import lombok.extern.slf4j.Slf4j;
-import SpringProject.entities.Rating;
-import SpringProject.entities.Song;
-
-/**
- * Database implementation of {@link RatingDao}.
- * <p>
- * This class uses JDBC to read/write {@link Rating} records in the {@code rating} table.
- * It requires a {@link Connector} to provide a database connection.
- * </p>
- */
 @Slf4j
+@Repository
 public class RatingDaoImpl implements RatingDao {
 
     private final Connector connector;
@@ -23,22 +18,12 @@ public class RatingDaoImpl implements RatingDao {
         this.connector = connector;
     }
 
+    public void closeConnection() {
+        connector.freeConnection();
+    }
 
-    /**
-     * Inserts a new rating into the database.
-     * <p>
-     * If a rating already exists for the same username, songID key, the existing
-     * record is updated instead.
-     * </p>
-     *
-     * @param rating the rating to insert/update
-     * @return number of rows affected usually 1
-     * @throws SQLException             if a database error occurs
-     * @throws IllegalArgumentException if {@code rating} is null
-     */
     @Override
     public int addRating(Rating rating) throws SQLException {
-
         if (rating == null) {
             throw new IllegalArgumentException("addRating(): rating cannot be null");
         }
@@ -59,23 +44,11 @@ public class RatingDaoImpl implements RatingDao {
             ps.setInt(2, rating.getSongID());
             ps.setDouble(3, rating.getUserRating());
             return ps.executeUpdate();
-
-        } catch (SQLException e) {
-            log.error("addRating() failed: {}", e.getMessage());
-            throw e;
         }
     }
 
-
-    /**
-     * Retrieves every rating from the database
-     *
-     * @return list of all ratings empty list if none found
-     * @throws SQLException if a database error occurs
-     */
     @Override
     public ArrayList<Rating> getAllRatings() throws SQLException {
-
         Connection conn = connector.getConnection();
         if (conn == null) {
             throw new SQLException("getAllRatings(): Could not connect to database");
@@ -90,26 +63,13 @@ public class RatingDaoImpl implements RatingDao {
             while (rs.next()) {
                 ratings.add(mapRatingRow(rs));
             }
-
-        } catch (SQLException e) {
-            log.error("getAllRatings() failed: {}", e.getMessage());
-            throw e;
         }
 
         return ratings;
     }
 
-    /**
-     * Finds a rating using the composite key username, songID
-     *
-     * @param username the username to search for
-     * @param songID   the song id to search for
-     * @return the matching rating, or {@code null} if not found
-     * @throws SQLException if a database error occurs
-     */
     @Override
     public Rating findRatingByUsernameAndSongID(String username, int songID) throws SQLException {
-
         Connection conn = connector.getConnection();
         if (conn == null) {
             throw new SQLException("findRatingByUsernameAndSongID(): Could not connect to database");
@@ -126,25 +86,13 @@ public class RatingDaoImpl implements RatingDao {
                     return mapRatingRow(rs);
                 }
             }
-
-        } catch (SQLException e) {
-            log.error("findRatingByUsernameAndSongID() failed: {}", e.getMessage());
-            throw e;
         }
 
         return null;
     }
 
-    /**
-     * Retrieves all ratings submitted by a specific user
-     *
-     * @param username the username to search for
-     * @return list of ratings for that user empty list if none found
-     * @throws SQLException if a database error occurs
-     */
     @Override
     public ArrayList<Rating> getUserRatingFromUsername(String username) throws SQLException {
-
         Connection conn = connector.getConnection();
         if (conn == null) {
             throw new SQLException("getUserRatingFromUsername(): Could not connect to database");
@@ -161,24 +109,32 @@ public class RatingDaoImpl implements RatingDao {
                     ratings.add(mapRatingRow(rs));
                 }
             }
-
-        } catch (SQLException e) {
-            log.error("getUserRatingFromUsername() failed: {}", e.getMessage());
-            throw e;
         }
 
         return ratings;
     }
 
+    @Override
+    public Song getLowestRatedSong() {
+        // If you don’t have SongDao yet, we return a Song with only the ID set (NOT null).
+        Integer id = getSongIdByQuery("SELECT songID FROM rating GROUP BY songID ORDER BY AVG(userRating) ASC LIMIT 1");
+        return (id == null) ? emptySong() : songWithId(id);
+    }
 
-    /**
-     * Converts the current result set row into a {@link Rating} object
-     *
-     * @param rs the result set positioned at a row
-     * @return a populated {@link Rating}
-     * @throws SQLException if column access fails
-     */
-    private static Rating mapRatingRow(ResultSet rs) throws SQLException {
+    @Override
+    public Song getMostPopularSong() {
+        Integer id = getSongIdByQuery("SELECT songID FROM rating GROUP BY songID ORDER BY COUNT(*) DESC LIMIT 1");
+        return (id == null) ? emptySong() : songWithId(id);
+    }
+
+    @Override
+    public Song getTopRatedSong() {
+        Integer id = getSongIdByQuery("SELECT songID FROM rating GROUP BY songID ORDER BY AVG(userRating) DESC LIMIT 1");
+        return (id == null) ? emptySong() : songWithId(id);
+    }
+
+
+    private Rating mapRatingRow(ResultSet rs) throws SQLException {
         return Rating.builder()
                 .username(rs.getString("username"))
                 .songID(rs.getInt("songID"))
@@ -186,5 +142,28 @@ public class RatingDaoImpl implements RatingDao {
                 .build();
     }
 
-}
+    private Integer getSongIdByQuery(String sql) {
+        try {
+            Connection conn = connector.getConnection();
+            if (conn == null) return null;
 
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) return rs.getInt("songID");
+            }
+        } catch (SQLException e) {
+            log.error("getSongIdByQuery() failed: {}", e.getMessage());
+        }
+        return null;
+    }
+
+    // These avoid returning null for Song methods
+    private Song emptySong() {
+        return Song.builder().build();
+    }
+
+    private Song songWithId(int songId) {
+        return Song.builder().id(songId).build();
+    }
+}
