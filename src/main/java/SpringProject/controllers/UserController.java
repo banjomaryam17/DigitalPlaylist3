@@ -1,10 +1,6 @@
 package SpringProject.controllers;
-
 import SpringProject.entities.User;
-import SpringProject.persistences.UserDao;
-import SpringProject.persistences.UserDaoImpl;
-import SpringProject.persistences.Connector;
-import SpringProject.persistences.MySqlConnector;
+import SpringProject.persistences.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserController {
 
     private final UserDao userDao;
+    //private final SubscriptionDao subscriptionDao;
 
-    public UserController() {
-        Connector connector = new MySqlConnector("database.properties");
-        this.userDao = new UserDaoImpl(connector);
+    public UserController(UserDao userDao) {  //SubscriptionDao subscriptionDao
+        this.userDao = userDao;
+        //this.subscriptionDao = subscriptionDao;
     }
 
     /**
@@ -27,13 +24,20 @@ public class UserController {
      * @param username the username to search for
      * @return the matching  User
      */
-     @GetMapping(path = "/{username}", produces = "application/json")
+    @GetMapping(path = "/{username}", produces = "application/json")
     public User getUser(@PathVariable String username) {
-        User u = userDao.findUserByUsername(username);
-        if (u == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        try {
+            User u = userDao.findUserByUsername(username);
+            if (u == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+            return u;
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("getUser() failed: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
         }
-        return u;
     }
 
     /**
@@ -44,16 +48,24 @@ public class UserController {
      */
     @PostMapping(path = "/register", consumes = "application/json", produces = "application/json")
     public User register(@RequestBody User newUser) {
-        if (newUser == null || newUser.getUsername() == null || newUser.getUsername().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username required");
-        }
+        try {
+            if (newUser == null || newUser.getUsername() == null || newUser.getUsername().isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username required");
+            }
 
-        int added = userDao.registerUser(newUser);
-        if (added != 1) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists or cannot register");
-        }
+            int added = userDao.registerUser(newUser);
+            if (added != 1) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists or cannot register");
+            }
 
-        return userDao.findUserByUsername(newUser.getUsername());
+            return userDao.findUserByUsername(newUser.getUsername());
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("register() failed: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
+        }
     }
 
     /**
@@ -63,17 +75,24 @@ public class UserController {
      */
     @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
     public User login(@RequestBody LoginRequest req) {
-        if (req == null || req.username == null || req.password == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and password required");
-        }
+        try {
+            if (req == null || req.username == null || req.password == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and password required");
+            }
 
-        User u = userDao.login(req.username, req.password);
-        if (u == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong username or password");
+            User u = userDao.login(req.username, req.password);
+            if (u == null) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong username or password");
+            }
+            return u;
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("login() failed: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
         }
-        return u;
     }
-
 
     /**
      * Updates a user's email.
@@ -84,15 +103,23 @@ public class UserController {
      */
     @PutMapping(path = "/{username}/email", consumes = "application/json", produces = "application/json")
     public boolean updateEmail(@PathVariable String username, @RequestBody EmailRequest req) {
-        if (req == null || req.email == null || req.email.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email required");
-        }
+        try {
+            if (req == null || req.email == null || req.email.isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email required");
+            }
 
-        boolean updated = userDao.updateUserEmail(req.email, username);
-        if (!updated) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            boolean updated = userDao.updateUserEmail(req.email, username);
+            if (!updated) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+            return true;
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("updateEmail() failed: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
         }
-        return true;
     }
 
     /**
@@ -104,15 +131,23 @@ public class UserController {
      */
     @PutMapping(path = "/{username}/password", consumes = "application/json", produces = "application/json")
     public boolean updatePassword(@PathVariable String username, @RequestBody PasswordRequest req) {
-        if (req == null || req.password == null || req.password.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password required");
-        }
+        try {
+            if (req == null || req.password == null || req.password.isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password required");
+            }
 
-        boolean updated = userDao.updateUserPassword(req.password, username);
-        if (!updated) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            boolean updated = userDao.updateUserPassword(req.password, username);
+            if (!updated) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+            return true;
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("updatePassword() failed: {}", e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
         }
-        return true;
     }
 
     /** JSON body for login requests. */
@@ -125,6 +160,7 @@ public class UserController {
     public static class EmailRequest {
         public String email;
     }
+
     /** JSON body for changing password. */
     public static class PasswordRequest {
         public String password;
