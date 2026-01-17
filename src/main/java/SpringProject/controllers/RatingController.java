@@ -20,7 +20,22 @@ public class RatingController {
 
     public RatingController() {
         Connector connector = new MySqlConnector("database.properties");
-        this.ratingDao = new RatingDaoImpl(connector);
+        this.ratingDao = new RatingDaoImpl(connector) {
+            @Override
+            public Song getLowestRatedSong() {
+                return null;
+            }
+
+            @Override
+            public Song getMostPopularSong() {
+                return null;
+            }
+
+            @Override
+            public Song getTopRatedSong() {
+                return null;
+            }
+        };
     }
     /**
      * Get all ratings in the system.
