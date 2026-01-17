@@ -26,7 +26,7 @@ class PlaylistSongDaoTest {
      */
     @BeforeAll
     static void setupDatabase() {
-        connector = new MySqlConnector("test_mac_database.properties");
+        connector = new MySqlConnector("test_database.properties");
         playlistSongDao = new PlaylistSongImpl(connector);
         System.out.println(" PlaylistSongDao Test ");
     }

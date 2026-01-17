@@ -8,7 +8,7 @@ import java.sql.*;
 
 @Slf4j
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl {
 
     private static final int DUPLICATE_KEY_ERROR_CODE = 1062;
 

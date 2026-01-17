@@ -29,7 +29,7 @@ class PlaylistDaoTest {
      */
     @BeforeAll
     static void setupDatabase() {
-        connector = new MySqlConnector("test_mac_database.properties");
+        connector = new MySqlConnector("test_database.properties");
         playlistDao = new PlaylistDaoImpl(connector);
         System.out.println("=== PlaylistDao Test Suite Started ===");
     }

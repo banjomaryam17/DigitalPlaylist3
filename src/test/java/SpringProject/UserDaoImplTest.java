@@ -2,7 +2,6 @@ package SpringProject;
 
 import SpringProject.entities.User;
 import SpringProject.persistences.MySqlConnector;
-import SpringProject.persistences.UserDao;
 import SpringProject.persistences.UserDaoImpl;
 import SpringProject.persistences.Connector;
 import org.junit.jupiter.api.*;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserDaoImplTest {
 
     private Connector connector;
-    private UserDao userDao;
+    private userDao userDao;
 
     private String createdUsername;
 

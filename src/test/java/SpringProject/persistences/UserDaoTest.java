@@ -28,7 +28,7 @@ class UserDaoTest {
      */
     @BeforeAll
     static void setupDatabase() {
-        connector = new MySqlConnector("test_mac_database.properties");
+        connector = new MySqlConnector("test_database.properties");
         userDao = new UserDaoImpl(connector);
         System.out.println("=== UserDao Test Suite Started ===");
     }

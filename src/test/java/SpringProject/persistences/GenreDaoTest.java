@@ -17,7 +17,7 @@ class GenreDaoTest {
      */
     @BeforeAll
     static  void setupDatabase(){
-        connector = new MySqlConnector("test_mac_database.properties");
+        connector = new MySqlConnector("test_database.properties");
         genreDao = new GenreImpl(connector);
         System.out.println("GenreDAO Test");
     }
@@ -410,7 +410,7 @@ class GenreDaoTest {
         Genre found = genreDao.findById(created.getId());
         assertNotNull(found);
         assertEquals(created.getName(), found.getName());
-        System.out.println("  ✓ Found genre: " + found.getName());
+        System.out.println(" Found genre: " + found.getName());
 
         // UPDATE
         found.setDescription("Updated description");
@@ -418,14 +418,14 @@ class GenreDaoTest {
         assertTrue(updated);
         Genre afterUpdate = genreDao.findById(found.getId());
         assertEquals("Updated description", afterUpdate.getDescription());
-        System.out.println("  ✓ Updated genre");
+        System.out.println(" Updated genre");
 
         // DELETE
         boolean deleted = genreDao.delete(found.getId());
         assertTrue(deleted);
         Genre afterDelete = genreDao.findById(found.getId());
         assertNull(afterDelete);
-        System.out.println("  ✓ Deleted genre");
+        System.out.println(" Deleted genre");
 
         System.out.println("Complete CRUD cycle successful");
     }

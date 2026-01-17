@@ -92,7 +92,7 @@ public class ArtistDaoImpl implements ArtistDao {
                 .name(rs.getString("name"))
                 .bio(rs.getString("bio"))
                 .country(rs.getString("country"))
-                .formedYear(rs.getInt("formed_year"))
+                .formedYear(rs.getInt("formedYear"))
                 .build();
     }
 
